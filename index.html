@@ -3,147 +3,365 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TANBLA Game</title>
+    <title>TONBOLLA Game</title>
     <style>
+        /* Google Fonts for Soft Font */
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&display=swap');
+
+        /* CSS */
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f9;
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f4e7d3, #e6ccb2);
             margin: 0;
             padding: 0;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
+            overflow: hidden;
         }
-        .container {
+
+        /* Splash Screen */
+        .splash-screen {
             text-align: center;
-            background: #fff;
+            background: rgba(255, 255, 255, 0.9);
             padding: 20px;
-            border-radius: 10px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            animation: fadeIn 2s ease-in-out;
+        }
+        .splash-screen h1 {
+            font-size: 3rem;
+            color: #a87e5d;
+            font-weight: 500;
+            margin: 0;
+            animation: bounce 2s infinite ease-in-out;
+        }
+
+        /* Header (Wallet Connection) */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 10px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+        }
+        .header .wallet-info {
+            font-size: 0.9rem;
+            color: #a87e5d;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .header button {
+            background-color: #a87e5d;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 400;
+        }
+        .header button:hover {
+            transform: scale(1.1);
+        }
+
+        /* Common Styles */
+        .page {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 80px 20px 20px; /* Add padding for header */
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 400px;
+            display: none; /* Hidden by default */
+            animation: fadeIn 1s ease-in-out;
+        }
+        .page.active {
+            display: block; /* Show active page */
         }
         h1 {
-            color: #333;
+            color: #a87e5d;
+            font-size: 1.8rem;
+            font-weight: 500;
+            margin-bottom: 20px;
         }
         button {
-            background-color: #007bff;
+            background-color: #a87e5d;
             color: white;
             border: none;
             padding: 10px 20px;
             margin: 10px;
-            border-radius: 5px;
+            border-radius: 20px;
             cursor: pointer;
-            font-size: 16px;
+            font-size: 1rem;
+            font-weight: 400;
+            transition: transform 0.3s ease;
         }
         button:hover {
-            background-color: #0056b3;
+            transform: scale(1.1);
         }
-        .cards {
+
+        /* Navigation Bar */
+        .nav-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.9);
             display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin-top: 20px;
-        }
-        .card {
-            width: 100px;
-            height: 150px;
-            background-color: #e9ecef;
-            border: 2px solid #ccc;
-            border-radius: 5px;
-            display: flex;
-            justify-content: center;
+            justify-content: space-around;
             align-items: center;
-            font-size: 18px;
-            font-weight: bold;
-            color: #333;
+            padding: 10px 0;
+            box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.1);
+            flex-wrap: wrap; /* Allow wrapping for small screens */
         }
-        .winner {
-            background-color: #d4edda;
-            color: #155724;
+        .nav-bar button {
+            background: none;
+            color: #a87e5d;
+            border: none;
+            font-size: 1rem;
+            font-weight: 400;
+            cursor: pointer;
             padding: 10px;
-            border-radius: 5px;
-            margin-top: 20px;
+            text-align: center;
+            transition: color 0.3s ease;
+            flex: 1 1 auto; /* Make buttons flexible */
+            min-width: 60px; /* Minimum width for buttons */
+        }
+        .nav-bar button:hover {
+            color: #8b654c;
+        }
+
+        /* Dropdown Menu */
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            bottom: 100%; /* Show above the button */
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+        }
+        .dropdown-content a {
+            display: block;
+            padding: 10px;
+            text-decoration: none;
+            color: #a87e5d;
+            font-size: 0.9rem;
+            font-weight: 400;
+            text-align: center;
+            transition: background-color 0.3s ease;
+        }
+        .dropdown-content a:hover {
+            background-color: #f4e7d3;
+        }
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 480px) {
+            .splash-screen h1 {
+                font-size: 2rem;
+            }
+            .page h1 {
+                font-size: 1.5rem;
+            }
+            .page p {
+                font-size: 0.9rem;
+            }
+            .nav-bar {
+                flex-direction: row; /* Keep buttons horizontal on small screens */
+                justify-content: space-around;
+            }
+            .nav-bar button {
+                font-size: 0.8rem;
+                padding: 8px;
+                margin: 5px 0; /* Add spacing between buttons */
+            }
+            .header .wallet-info {
+                font-size: 0.8rem;
+            }
+            .header button {
+                padding: 5px;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>TANBLA Game</h1>
-        <button id="startGame">Start Game</button>
-        <button id="buyCard">Buy Card (1 TON)</button>
-        <button id="checkCards">Check Cards</button>
-        <button id="showWinners">Show Winners</button>
+    <!-- Header (Wallet Connection) -->
+    <div class="header">
+        <div class="wallet-info">
+            <p id="walletBalance">Wallet Balance: -- TON</p>
+        </div>
+        <button id="connectWallet">Connect Wallet</button>
+    </div>
 
-        <div class="cards" id="cardsContainer"></div>
+    <!-- Splash Screen -->
+    <div class="splash-screen" id="splashScreen">
+        <h1>TONBOLLA</h1>
+    </div>
 
-        <div id="winnerMessage" class="winner" style="display: none;">
-            Congratulations! You are a winner!
+    <!-- Pages -->
+    <div class="page" id="homePage">
+        <h1>🎉 TONBOLLA Game 🎉</h1>
+        <p>Next game starts in: <span id="countdown">01:00:00</span></p>
+        <button onclick="showPage('buyCardPage')">🛒 Buy Card</button>
+        <button onclick="showPage('inviteFriendsPage')">👥 Invite Friends</button>
+    </div>
+
+    <div class="page" id="buyCardPage">
+        <h1>Buy a Card</h1>
+        <p>Click the button below to buy a card for 1 TON.</p>
+        <button onclick="buyCard()">🛒 Buy Card (1 TON)</button>
+        <button onclick="showPage('homePage')">🏠 Back to Home</button>
+    </div>
+
+    <div class="page" id="checkCardsPage">
+        <h1>Your Cards</h1>
+        <p>Your purchased cards will appear here.</p>
+        <button onclick="showPage('homePage')">🏠 Back to Home</button>
+    </div>
+
+    <div class="page" id="winnersPage">
+        <h1>🏆 Winners</h1>
+        <p>Winners will be displayed here.</p>
+        <button onclick="showPage('homePage')">🏠 Back to Home</button>
+    </div>
+
+    <div class="page" id="inviteFriendsPage">
+        <h1>👥 Invite Friends</h1>
+        <p>Share this link with your friends:</p>
+        <div id="inviteLink">https://t.me/tonbollagamebot?start=ref_abc123</div>
+        <button onclick="copyInviteLink()">📋 Copy Link</button>
+        <button onclick="showPage('homePage')">🏠 Back to Home</button>
+    </div>
+
+    <!-- Navigation Bar -->
+    <div class="nav-bar">
+        <button onclick="showPage('homePage')">🏠 Home</button>
+        <button onclick="showPage('checkCardsPage')">🔍 Check Cards</button>
+        <button onclick="showPage('winnersPage')">🏆 Winners</button>
+        <div class="dropdown">
+            <button>TASK</button>
+            <div class="dropdown-content">
+                <a href="https://t.me/tonbolla" target="_blank">📢 Join Channel</a>
+                <a href="https://t.me/tonbolla_game" target="_blank">💬 Join Group</a>
+                <a href="#" onclick="showPage('inviteFriendsPage')">👥 Invite Friends</a>
+            </div>
         </div>
     </div>
 
+    <!-- JavaScript -->
+    <script src="https://unpkg.com/@tonconnect/sdk@latest/dist/tonconnect.min.js"></script>
     <script>
-        // Simulated game logic
-        const cardsContainer = document.getElementById('cardsContainer');
-        const winnerMessage = document.getElementById('winnerMessage');
+        // Variables
+        const splashScreen = document.getElementById('splashScreen');
+        const countdownElement = document.getElementById('countdown');
+        const walletBalanceElement = document.getElementById('walletBalance');
+        const connectWalletButton = document.getElementById('connectWallet');
 
-        let userCards = [];
-        let announcedNumbers = [];
+        let tonConnect;
 
-        // Buy Card
-        document.getElementById('buyCard').addEventListener('click', () => {
-            if (userCards.length >= 5) {
-                alert('You can only buy up to 5 cards.');
-                return;
-            }
-            const cardNumbers = Array.from({ length: 15 }, () => Math.floor(Math.random() * 99) + 1);
-            userCards.push(cardNumbers);
+        // Initialize TON Connect
+        async function initTonConnect() {
+            tonConnect = new TonConnect({
+                manifestUrl: 'https://your-domain.com/tonconnect-manifest.json' // Replace with your manifest URL
+            });
 
-            renderCards();
-            alert('You have successfully purchased a card!');
-        });
-
-        // Check Cards
-        document.getElementById('checkCards').addEventListener('click', () => {
-            if (userCards.length === 0) {
-                alert('You have no cards. Buy a card first.');
-                return;
-            }
-
-            const isWinner = userCards.some(card => card.every(num => announcedNumbers.includes(num)));
-            if (isWinner) {
-                winnerMessage.style.display = 'block';
-            } else {
-                alert('Your cards are not complete yet.');
-            }
-        });
-
-        // Show Winners
-        document.getElementById('showWinners').addEventListener('click', () => {
-            alert('Winners will be displayed here.');
-        });
-
-        // Render Cards
-        function renderCards() {
-            cardsContainer.innerHTML = '';
-            userCards.forEach((card, index) => {
-                const cardDiv = document.createElement('div');
-                cardDiv.className = 'card';
-                cardDiv.textContent = card.slice(0, 5).join(', ');
-                cardsContainer.appendChild(cardDiv);
+            connectWalletButton.addEventListener('click', async () => {
+                try {
+                    await tonConnect.connect();
+                    alert('Wallet connected successfully!');
+                    updateWalletBalance();
+                } catch (error) {
+                    console.error('Failed to connect wallet:', error);
+                    alert('Failed to connect wallet. Please try again.');
+                }
             });
         }
 
-        // Announce Numbers (Simulated)
-        document.getElementById('startGame').addEventListener('click', () => {
-            announcedNumbers = [];
-            for (let i = 0; i < 15; i++) {
-                const number = Math.floor(Math.random() * 99) + 1;
-                if (!announcedNumbers.includes(number)) {
-                    announcedNumbers.push(number);
-                }
+        // Update wallet balance
+        async function updateWalletBalance() {
+            if (!tonConnect || !tonConnect.connected) {
+                walletBalanceElement.textContent = 'Wallet Balance: -- TON';
+                return;
             }
-            alert(`Announced numbers: ${announcedNumbers.join(', ')}`);
-        });
+
+            const account = tonConnect.account;
+            const balance = await fetch(`https://tonapi.io/v2/accounts/${account.address}`).then(res => res.json());
+            const formattedBalance = (balance.balance / 1e9).toFixed(2); // Convert nanotons to tons
+            walletBalanceElement.textContent = `Wallet Balance: ${formattedBalance} TON`;
+        }
+
+        // Countdown Timer
+        function startCountdown() {
+            let timeLeft = 3600; // 1 hour in seconds
+            setInterval(() => {
+                const hours = Math.floor(timeLeft / 3600).toString().padStart(2, '0');
+                const minutes = Math.floor((timeLeft % 3600) / 60).toString().padStart(2, '0');
+                const seconds = (timeLeft % 60).toString().padStart(2, '0');
+                countdownElement.textContent = `${hours}:${minutes}:${seconds}`;
+                timeLeft--;
+            }, 1000);
+        }
+
+        // Show splash screen for 3 seconds, then switch to the main game screen
+        setTimeout(() => {
+            splashScreen.style.display = 'none';
+            showPage('homePage');
+            startCountdown();
+            initTonConnect();
+        }, 3000);
+
+        // Show a specific page and hide others
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            document.getElementById(pageId).classList.add('active');
+        }
+
+        // Simulated Buy Card Function
+        function buyCard() {
+            alert('You have successfully purchased a card!');
+        }
+
+        // Copy Invite Link to Clipboard
+        function copyInviteLink() {
+            const inviteLink = document.getElementById('inviteLink').textContent;
+            navigator.clipboard.writeText(inviteLink).then(() => {
+                alert('Invite link copied to clipboard!');
+            }).catch(err => {
+                console.error('Failed to copy invite link:', err);
+                alert('Failed to copy invite link. Please try again.');
+            });
+        }
     </script>
 </body>
 </html>
