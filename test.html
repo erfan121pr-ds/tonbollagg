@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TON Connect Test</title>
+    <!-- بارگذاری کتابخانه TON Connect -->
     <script src="https://unpkg.com/@tonconnect/sdk@latest/dist/tonconnect.min.js"></script>
 </head>
 <body>
@@ -11,20 +12,25 @@
     <button id="connectWallet">Connect Wallet</button>
 
     <script>
-        const tonConnect = new TonConnect({
-            manifestUrl: 'https://erfan121pr-ds.github.io/tonbollagg/tonconnect-manifest.json'
-        });
+        // بررسی اینکه آیا TonConnect به درستی بارگذاری شده یا نه
+        if (typeof TonConnect === 'undefined') {
+            alert('❌ TON Connect SDK is not loaded. Please check the CDN link.');
+        } else {
+            const tonConnect = new TonConnect({
+                manifestUrl: 'https://erfan121pr-ds.github.io/tonbollagg/tonconnect-manifest.json'
+            });
 
-        document.getElementById('connectWallet').addEventListener('click', async () => {
-            try {
-                await tonConnect.connect();
-                const walletAddress = tonConnect.account.address;
-                alert(`Wallet connected successfully! Address: ${walletAddress}`);
-            } catch (error) {
-                console.error('Failed to connect wallet:', error);
-                alert('Failed to connect wallet. Please try again.');
-            }
-        });
+            document.getElementById('connectWallet').addEventListener('click', async () => {
+                try {
+                    await tonConnect.connect();
+                    const walletAddress = tonConnect.account.address;
+                    alert(`Wallet connected successfully! Address: ${walletAddress}`);
+                } catch (error) {
+                    console.error('Failed to connect wallet:', error);
+                    alert('Failed to connect wallet. Please try again.');
+                }
+            });
+        }
     </script>
 </body>
 </html>
