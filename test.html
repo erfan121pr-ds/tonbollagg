@@ -3,34 +3,80 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TON Connect Test</title>
-    <!-- بارگذاری کتابخانه TON Connect -->
-    <script src="https://unpkg.com/@tonconnect/ui@latest/dist/tonconnect-ui.min.js"></script>
+    <title>TONBOLLA Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f4f4f9;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .wallet-info {
+            margin-top: 20px;
+        }
+        .cards-list {
+            margin-top: 20px;
+        }
+    </style>
 </head>
 <body>
-    <h1>Test TON Connect</h1>
-    <button id="connectWallet">Connect Wallet</button>
+    <div class="container">
+        <h1>🎉 TONBOLLA Game 🎉</h1>
+        <p id="next-game-timer">Next game starts in: 01:00:00</p>
 
-    <script>
-        // بررسی اینکه آیا TonConnect به درستی بارگذاری شده یا نه
-        if (typeof TonConnect === 'undefined') {
-            alert('❌ TON Connect SDK is not loaded. Please check the CDN link.');
-        } else {
-            const tonConnect = new TonConnect({
-                manifestUrl: 'https://erfan121pr-ds.github.io/tonbollagg/tonconnect-manifest.json'
-            });
+        <!-- Connect Wallet Button -->
+        <button id="connect-wallet-btn">Connect Wallet</button>
 
-            document.getElementById('connectWallet').addEventListener('click', async () => {
-                try {
-                    await tonConnect.connect();
-                    const walletAddress = tonConnect.account.address;
-                    alert(`Wallet connected successfully! Address: ${walletAddress}`);
-                } catch (error) {
-                    console.error('Failed to connect wallet:', error);
-                    alert('Failed to connect wallet. Please try again.');
-                }
-            });
-        }
-    </script>
+        <!-- Wallet Info -->
+        <div class="wallet-info" id="wallet-info" style="display: none;">
+            <p>Wallet Address: <span id="wallet-address">--</span></p>
+            <p>Wallet Balance: <span id="wallet-balance">--</span> TON</p>
+        </div>
+
+        <!-- Buy Card Button -->
+        <button id="buy-card-btn" style="display: none;">🛒 Buy Card (1 TON)</button>
+
+        <!-- Your Cards -->
+        <div class="cards-list" id="cards-list" style="display: none;">
+            <h3>Your Cards</h3>
+            <ul id="your-cards"></ul>
+        </div>
+
+        <!-- Winners -->
+        <div class="winners" id="winners" style="display: none;">
+            <h3>🏆 Winners</h3>
+            <ul id="winners-list"></ul>
+        </div>
+
+        <!-- Invite Friends -->
+        <div class="invite-friends" id="invite-friends" style="display: none;">
+            <h3>👥 Invite Friends</h3>
+            <p>Share this link with your friends:</p>
+            <input type="text" id="invite-link" value="https://t.me/tonbollagamebot?start=ref_abc123" readonly />
+            <button onclick="copyInviteLink()">📋 Copy Link</button>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
 </body>
 </html>
